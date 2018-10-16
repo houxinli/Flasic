@@ -57,7 +57,6 @@ if __name__ == '__main__':
 	for songfile in bsongfiles:
 		lyricfile = open(bpath + songfile)
 		name = lyricfile.readline().strip('\n')
-		print(name)
 		lyricfile.close()
 		filename = os.path.splitext(songfile)[0]
 		cursong = Song('Billboard', filename, name)
@@ -80,4 +79,3 @@ if __name__ == '__main__':
 
 	app.run(debug = True)
 
-	print(Billboard)
