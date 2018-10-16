@@ -1,5 +1,7 @@
 venv/
 
+flaskr/
+
 static/music/
 static/assets/
 static/images/
@@ -20,3 +22,4 @@ htmlcov/
 dist/
 build/
 *.egg-info/
+*.pdf
