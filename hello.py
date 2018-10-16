@@ -1,6 +1,7 @@
 from flask import Flask
 # from flask_script import Manager
 from flask import render_template
+from flask_bootstrap import Bootstrap
 from flask import url_for
 import os
 import sys
@@ -8,6 +9,7 @@ import sys
 # sys.setdefaultencoding('utf8')
 
 app = Flask(__name__)
+
 
 @app.route('/')
 def index():
@@ -20,22 +22,19 @@ def Billboard():
 
 @app.route('/Personal')
 def Personal():
-	return render_template('index.html', songs = Personal)
+	return render_template('index.html', songs = Personal, sname = 'The_theme_of_Sachio')
 	pass
-
-@app.route('/user/<name>')
-def user(name):
-    return '<h1>SHIT, %s!</h1>' % name
 
 @app.route('/song/Billboard/<sname>/')
 def bsong(sname):
 	return render_template('index.html', songs = Billboard, sname = sname)
 	pass
 
-@app.route('/#!/song/Personal/<sname>/')
+@app.route('/song/Personal/<sname>/')
 def psong(sname):
 	return render_template('index.html', songs = Personal, sname = sname)
 	pass
+
 
 class Song(object):
 	"""docstring for Song"""

@@ -1,41 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-  <link rel="stylesheet" href="/static/assets/css/main.css" />
+	<meta charset="utf-8">
+  <!-- <link rel="stylesheet" href="/static/assets/css/main.css" /> -->
+  <link href="/static/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="/static/my.css">
 	<title>Flasic</title>
 </head>
 <body>
-	<div id="container" >
-	{% for song in songs.values() %}
-	<div class="song cover">
-		<!-- {{url_for('static',filename = song.mp3)}}<br/> -->
-		<a href="/song/{{song.cat}}/{{song.name}}/">
-		<!-- {{song.name}} -->
-				<!-- <img class="shadow" src="{{url_for('static',filename = song.shadow)}}"> -->
-        <img class="cover" src="{{url_for('static',filename = song.cover)}}" /> 
-    	
-    	</a>
+	<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container-fluid"> 
+    <div class="navbar-header">
+        <a class="navbar-brand" href="/">Flasic</a>
     </div>
-    {% endfor %}
+    <div class="collapse navbar-collapse" id="example-navbar-collapse">
+        <ul class="nav navbar-nav">
+            <li class="Billboard"><a href="/Billboard">Billboard</a></li>
+            <li class="Personal"><a href="/Personal">Personal</a></li>
+        </ul>
+        {% if sname %}
+        <ul class="nav navbar-nav navbar-right">
+          <p class="navbar-text"><span class="glyphicon glyphicon-play"></span> Currently Playing: {{sname}} </p>
+          <button class="btn btn-default navbar-btn" onclick="changeLyric()" >显示/隐藏歌词</button>
+          {% endif %}
+        </ul>
+        
+    </div>
+    </div>
+	</nav>
+
+  <div id="page-wrapper">
+    <div id="page-inner"> 
+      <div class="row">
+      	<div id="container" >
+      	{% for song in songs.values() %}
+      	<div class="song cover">
+      		<!-- {{url_for('static',filename = song.mp3)}}<br/> -->
+      		<a href="/song/{{song.cat}}/{{song.name}}/">
+      		<!-- {{song.name}} -->
+    				<!-- <img class="shadow" src="{{url_for('static',filename = song.shadow)}}"> -->
+            <img id="{{song.name}}}" class="cover" src="{{url_for('static',filename = song.cover)}}" /> 	
+        	</a>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  {% if sname %}
+  <div id="player">
+    <audio controls="controls" width = 1000>
+      <source src="{{url_for('static',filename = songs[sname].mp3)}}" type="audio/mp3" />
+    </audio>
+  </div>
+  {% endif %}
 	</div>
-
-	<div id=div1>
-  <iframe src="{{url_for('static',filename = songs[sname].lyric)}}" name=iframe1></iframe></div>
-	<script>
+	<div id="lyric-container">
+  <iframe class=" " id="lyrics" frameborder="0" flagshow="0" src="{{url_for('static',filename = songs[sname].lyric)}}" name=iframe1>
+  <head>
+    <meta http-equiv="Content-Type" content="text; charset=gb2312"/>
+  </head>
+  </iframe></div>
+<!-- 	<script>
 	//在iframe1中已经显示有TXT文本的内容，下面代码是把TXT中的内容中的HTML标记取消，只取得文本
-	var txtval=ifram1.body.innerText;
-	//把文本显示在div1中
-	div1.innerHTML=txtval;
-	</script>
-	{% if sname %}
-	<div style="margin: 0 auto; width: 80%; position: fixed; bottom: 5px; height: 50px; font-size: 0; line-height: 0; z-index: 100; text-align: center;">
-		<audio controls="controls" width="300">
-	  	<source src="{{url_for('static',filename = songs[sname].mp3)}}" type="audio/mp3" />
-		</audio>
- 	</div>
-	{% endif %}
+	var txtval=iframe1.body.innerText;
 
+	//把文本显示在div1中
+	vardiv = document.getElementById('lyric-container');
+  vardiv.innerHTML=txtval;
+	</script> -->
+  <script type="text/javascript" src="/static/my.js"></script>
+  <script src="/static/jquery.min.js"></script>
+  <script src="/static/bootstrap.min.js"></script>
 </body>
 </html>

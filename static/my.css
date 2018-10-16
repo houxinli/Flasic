@@ -1,4 +1,57 @@
+body{
+	overflow-x: hidden;
+	background-image: url(/static/bg.jpg);
+}
+
 .cover{
 	float: left;
 	position: relative;
+	opacity: 0.6;
 }
+
+.cover:hover{
+	opacity: 1;
+}
+
+#page-inner{
+	margin-top: 60px;
+}
+
+#player{
+	margin: 0 auto; 
+	width: 100%; 
+	position: fixed; 
+	bottom: 5px; 
+	height: 50px; 
+	left: 0%;
+	font-size: 0; 
+	line-height: 0; 
+	z-index: 100; 
+	text-align: center;
+}
+
+#lyrics{
+	position: fixed;
+	left: -30%;
+	width: 30%;
+	height: 70%;
+	top: 10%;
+	z-index: 999;
+	opacity: 0.9;
+	transition-duration: 500ms;
+	overflow-y: hidden;
+	background-color: #F8F4ED;
+	font-family: Helvetica;
+	font-weight: 14;
+}
+
+iframe::-webkit-scrollbar {
+   width: 0px;
+   height: 0px;
+}
+
+#lyrics.show{
+	left: 0%;
+}
+
+
