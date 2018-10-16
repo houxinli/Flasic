@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+  <link rel="stylesheet" href="/static/assets/css/main.css" />
+  <link rel="stylesheet" type="text/css" href="/static/my.css">
+	<title>Flasic</title>
+</head>
+<body>
+	<div id="container" >
+	{% for song in songs.values() %}
+	<div class="song cover">
+		<!-- {{url_for('static',filename = song.mp3)}}<br/> -->
+		<a href="/song/{{song.cat}}/{{song.name}}/">
+		<!-- {{song.name}} -->
+				<!-- <img class="shadow" src="{{url_for('static',filename = song.shadow)}}"> -->
+        <img class="cover" src="{{url_for('static',filename = song.cover)}}" /> 
+    	
+    	</a>
+    </div>
+    {% endfor %}
+	</div>
+
+	<div id=div1>
+  <iframe src="{{url_for('static',filename = songs[sname].lyric)}}" name=iframe1></iframe></div>
+	<script>
+	//在iframe1中已经显示有TXT文本的内容，下面代码是把TXT中的内容中的HTML标记取消，只取得文本
+	var txtval=ifram1.body.innerText;
+	//把文本显示在div1中
+	div1.innerHTML=txtval;
+	</script>
+	{% if sname %}
+	<div style="margin: 0 auto; width: 80%; position: fixed; bottom: 5px; height: 50px; font-size: 0; line-height: 0; z-index: 100; text-align: center;">
+		<audio controls="controls" width="300">
+	  	<source src="{{url_for('static',filename = songs[sname].mp3)}}" type="audio/mp3" />
+		</audio>
+ 	</div>
+	{% endif %}
+
+</body>
+</html>

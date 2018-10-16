@@ -1,0 +1,5 @@
+D:
+cd D:\Xinli\Univ\JuniorS1\Digital_Assets_Management\Homeworks\HW02
+venv\Scripts\activate
+
+python hello.py

@@ -1,5 +1,13 @@
 venv/
 
+static/music/
+static/assets/
+static/images/
+static/js/
+static/css/
+
+templates/net/
+
 *.pyc
 __pycache__/
 
