@@ -15,25 +15,40 @@ app = Flask(__name__)
 def index():
 	return render_template('index.html', songs = All, sname = 'Something_Just_Like_This')
 
-@app.route('/Billboard')
-def Billboard():
-	return render_template('index.html', songs = Billboard, sname = 'Something_Just_Like_This')
+@app.route('/<cname>/<sname>/')
+def song(cname, sname):
+	# return cname + ": " + sname
+	return render_template('index.html', songs = category(cname), sname = sname)
 	pass
 
-@app.route('/Personal')
-def Personal():
-	return render_template('index.html', songs = Personal, sname = 'The_theme_of_Sachio')
+@app.route('/<cname>/')
+def cname(cname):
+	# return render_template('index.html', songs = cname, sname = 'Something_Just_Like_This')
+	return render_template('index.html', songs = category(cname), sname = str(list(category(cname).values())[0].name) )
 	pass
 
-@app.route('/song/Billboard/<sname>/')
-def bsong(sname):
-	return render_template('index.html', songs = Billboard, sname = sname)
+def category(cname):
+	if cname == 'Billboard':
+		return Billboard
+	elif cname == 'Personal':
+		return Personal
+	else :
+		return All
 	pass
+# @app.route('/Personal')
+# def Personal():
+# 	return render_template('index.html', songs = Personal, sname = 'The_theme_of_Sachio')
+# 	pass
 
-@app.route('/song/Personal/<sname>/')
-def psong(sname):
-	return render_template('index.html', songs = Personal, sname = sname)
-	pass
+# @app.route('/song/Billboard/<sname>/')
+# def bsong(sname):
+# 	return render_template('index.html', songs = Billboard, sname = sname)
+# 	pass
+
+# @app.route('/song/Personal/<sname>/')
+# def psong(sname):
+# 	return render_template('index.html', songs = Personal, sname = sname)
+# 	pass
 
 
 class Song(object):
