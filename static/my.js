@@ -34,6 +34,14 @@ function changeLyric() {
 
 function activate() {
 	obj = document.getElementById('lyrics');
+	pathname = window.location.pathname;
+	cname_sname = pathname.split('/');
+	cname = cname_sname[1];
+	sname = cname_sname[2];
+	console.log("cname: ", cname);
+	console.log("sname: ", sname);
+	$('.' + cname).addClass("active");
+	$('#' + sname).addClass("active");
 }
 
 addLoadEvent(activate);

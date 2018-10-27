@@ -3,10 +3,14 @@ body{
 	background-image: url(/static/bg.jpg);
 }
 
+.cover.active{
+	opacity: 1;
+}
+
 .cover{
 	float: left;
 	position: relative;
-	opacity: 0.6;
+	opacity: 0.5;
 }
 
 .cover:hover{
@@ -41,7 +45,7 @@ body{
 	transition-duration: 500ms;
 	overflow-y: hidden;
 	background-color: #F8F4ED;
-	font-family: Helvetica;
+	/*font-family: Helvetica;*/
 	font-weight: 14;
 }
 

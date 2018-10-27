@@ -34,12 +34,12 @@
       <div class="row">
       	<div id="container" >
       	{% for song in songs.values() %}
-      	<div class="song cover">
+      	<div class="song cover" id="{{song.name}}">
       		<!-- {{url_for('static',filename = song.mp3)}}<br/> -->
       		<a href="/{{song.cat}}/{{song.name}}/">
       		<!-- {{song.name}} -->
     				<!-- <img class="shadow" src="{{url_for('static',filename = song.shadow)}}"> -->
-            <img id="{{song.name}}}" class="cover" src="{{url_for('static',filename = song.cover)}}" /> 	
+            <img src="{{url_for('static',filename = song.cover)}}" /> 	
         	</a>
         </div>
         {% endfor %}
