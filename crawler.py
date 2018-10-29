@@ -58,7 +58,7 @@ def getSong(sid):
         album = {"alid": alid, "alname": alname}
         # download cover
         img_element = soup.select('.cvrwrap img')[0]
-        url = img_element['src'].replace('130', '800')
+        url = img_element['src'].replace('130', '100')
         urllib.request.urlretrieve(url, 'static/music/cover/' + str(sid) + ".png" )
         
         # handle lyrics
@@ -71,11 +71,11 @@ def getSong(sid):
         lyrics_file = open('static/music/lyrics/' + str(sid) + '.txt', 'w+', encoding='utf-8' )
         lyrics_file.write(sname + '\nArtists:')
         for artist in artists:
-            lyrics_file.write(artist['aname'] + ' ')
-        lyrics_file.write('\n\n')
+            lyrics_file.write(artist['aname'] + ' / ')
+        lyrics_file.write('\nAlbum:' + str(alname) + '\n\n')
         if len(lines) > 0 :
             for line in lines:
-                lyrics_file.write(line + '\n' )
+                lyrics_file.write(line.strip() + '\n' )
         else:
             lyrics_file.write('No lyrics\n')
         lyrics_file.close()
@@ -94,15 +94,39 @@ def getSong(sid):
     except Exception as e:
         print("unexpected error")
 
-
+def init():
+    os.remove("static/music/playlists.json")
+    os.remove("static/music/songs.json")
+    if os.path.exists("static/music/playlists.json"):
+        pass
+    else:
+        playlists_file = open("static/music/playlists.json",'w+', encoding = 'utf-8')
+        playlists_file.write('{}')
+        playlists_file.close()
+    if os.path.exists("static/music/songs.json"):
+        pass
+    else:
+        songs_file = open("static/music/songs.json",'w+', encoding = 'utf-8')
+        songs_file.write('{}')
+        songs_file.close()
+    if not os.path.exists('static/music/audio'):
+        os.mkdir('static/music/audio')
+    if not os.path.exists('static/music/cover'):
+        os.mkdir('static/music/cover')
+    if not os.path.exists('static/music/lyrics'):
+        os.mkdir('static/music/lyrics')
+    pass
 
 if __name__ == '__main__':
     session = requests.session()
 
+    init()
     playlists_file = open("static/music/playlists.json",'r+', encoding = 'utf-8')
     songs_file = open("static/music/songs.json",'r+', encoding = 'utf-8')
     playlists = json.load(playlists_file)
     songs = json.load(songs_file)
+    songs_file.close()
+    playlists_file.close()
 
     # lids = ['2256615030', '409336560']
     lids = ['993510552', '540425046']
@@ -123,10 +147,8 @@ if __name__ == '__main__':
                         raise e
                     songs[sid] = song
 
-    print(songs)
-    print(playlists)
-    songs_file.close()
-    playlists_file.close()
+    # print(songs)
+    # print(playlists)
     playlists_file = open("static/music/playlists.json",'w+', encoding = 'utf-8')
     songs_file = open("static/music/songs.json",'w+', encoding = 'utf-8')
     json.dump(songs, songs_file, indent = 4, ensure_ascii = False, sort_keys = True)

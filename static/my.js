@@ -36,12 +36,15 @@ function activate() {
 	obj = document.getElementById('lyrics');
 	pathname = window.location.pathname;
 	cname_sname = pathname.split('/');
-	cname = cname_sname[1];
-	sname = cname_sname[2];
-	console.log("cname: ", cname);
-	console.log("sname: ", sname);
-	$('.' + cname).addClass("active");
-	$('#' + sname).addClass("active");
+	r = cname_sname[1];
+	id = cname_sname[2];
+	if (r == 'song') {
+		$('#' + id).addClass("active");
+	}
+	else if (r == 'playlist'){
+		$('.playlist.' + id).addClass("active");	
+	}
+
 }
 
 addLoadEvent(activate);

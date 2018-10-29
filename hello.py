@@ -53,10 +53,10 @@ def category(cname):
 
 class Song(object):
 	"""docstring for Song"""
-	def __init__(self, cat, filename, name):
+	def __init__(self, sid):
 		super(Song, self).__init__()
 		self.filename = filename;
-		self.name = name;
+		self.sid = sid;
 		self.cat = cat;
 		self.mp3 = 'music/' + str(cat) + '/MP3/' + str(filename) + '.mp3'
 		self.cover = 'music/' + str(cat) + '/covers/' + str(filename) + '.png'
