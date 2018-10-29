@@ -15,7 +15,7 @@
     </div>
     <div class="collapse navbar-collapse" id="example-navbar-collapse">
         <ul class="nav navbar-nav">
-          {% for playlist in playlists %}
+          {% for playlist in playlists.values() %}
             <li class=" playlist {{playlist['lid']}} "><a href="/playlist/{{playlist['lid']}}/">{{ playlist['lname'] }}</a></li>
           {% endfor %}
         </ul>
@@ -30,20 +30,27 @@
     </div>
 	</nav>
 
+{% macro cover(song) %}
+  <div class="song cover" id="{{song['sid']}}">
+    <a href="/song/{{song['sid']}}/">
+      <img src="{{url_for('static',filename = mpath(song['sid'], 'cover'))}}" />  
+    </a>
+  </div>
+{% endmacro %}
+
   <div id="page-wrapper">
     <div id="page-inner"> 
       <div class="row">
       	<div id="container" >
-      	{% for song in songs.values() %}
-      	<div class="song cover" id="{{song['sid']}}">
-      		<!-- {{url_for('static',filename = song.mp3)}}<br/> -->
-      		<a href="/song/{{song['sid']}}/">
-      		<!-- {{song.name}} -->
-    				<!-- <img class="shadow" src="{{url_for('static',filename = song.shadow)}}"> -->
-            <img src="{{url_for('static',filename = mpath(song['sid'], 'cover'))}}" /> 	
-        	</a>
-        </div>
-        {% endfor %}
+          {% if lid %}
+            {% for index in playlists[lid]['sids'] %}
+              {{cover(songs[index])}}
+            {% endfor %}
+          {% else %}
+          	{% for song in songs.values() %}
+              {{ cover(song) }}
+            {% endfor %}
+          {% endif %}
       </div>
     </div>
   </div>

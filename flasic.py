@@ -49,9 +49,10 @@ if __name__ == '__main__':
 
     playlists_file = open("static/music/playlists.json",'r+', encoding = 'utf-8')
     songs_file = open("static/music/songs.json",'r+', encoding = 'utf-8')
-    playlists = json.load(playlists_file)
+    # playlists = json.load(playlists_file)
+    All = json.load(playlists_file)
     songs = json.load(songs_file)
-    All = list(playlists.values())
+    # All = list(playlists.values())
     songs_file.close()
     playlists_file.close()
 
