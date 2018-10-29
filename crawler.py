@@ -23,7 +23,7 @@ def getPlaylist(lid = '2256615030'):
     # print(lname)
     playlist = {}
     playlist['lid'] = str(lid)
-    playlist['name'] = lname
+    playlist['lname'] = lname
     sids = []
     for music in musics:
         sid = music['href'].strip("/song?id=")
@@ -33,53 +33,105 @@ def getPlaylist(lid = '2256615030'):
 
     return playlist
 
-def downloadSong(sid, file_path):
-    url = 'http://music.163.com/song/media/outer/url?id=' + str(sid)
-    urllib.request.urlretrieve(url, file_path + '/' + str(sid) + '.mp3')
+# def downloadSong(sid, file_path):
+
+def getSong(sid):
+    song = {}
+    song['sid'] = sid
+    try:
+        url = 'http://music.163.com/song/media/outer/url?id=' + str(sid)
+        urllib.request.urlretrieve(url, 'static/music/audio/' + str(sid) + '.mp3')
+
+        # handle cover & info
+        url = 'http://music.163.com/song?id=' + str(sid)
+        soup = BeautifulSoup(session.get(url, headers = headers).content, 'lxml')
+        sname = soup.select('em.f-ff2')[0].get_text()
+        artists = []
+        artist_elements = soup.select("p.des span a")
+        for element in artist_elements:
+            aid = element['href'].strip("/artist?id=")
+            aname = element.get_text()
+            artists.append({"aid":aid , "aname": aname})
+        album_element = soup.select("p.des > a")[0]
+        alid = album_element['href'].strip("/album?id=")
+        alname = album_element.get_text()
+        album = {"alid": alid, "alname": alname}
+        # download cover
+        img_element = soup.select('.cvrwrap img')[0]
+        url = img_element['src'].replace('130', '800')
+        urllib.request.urlretrieve(url, 'static/music/cover/' + str(sid) + ".png" )
+        
+        # handle lyrics
+        url = 'http://music.163.com/api/song/lyric?id=' + str(sid) + '&lv=1&tv=-1&kv=1'
+        response = requests.get(url, headers = headers)
+        text = response.text
+        lyrics_json = json.loads(text)
+        lyrics = lyrics_json['lrc']['lyric']
+        lines = re.findall( r'\[.*\](.*)', lyrics )
+        lyrics_file = open('static/music/lyrics/' + str(sid) + '.txt', 'w+', encoding='utf-8' )
+        lyrics_file.write(sname + '\nArtists:')
+        for artist in artists:
+            lyrics_file.write(artist['aname'] + ' ')
+        lyrics_file.write('\n\n')
+        if len(lines) > 0 :
+            for line in lines:
+                lyrics_file.write(line + '\n' )
+        else:
+            lyrics_file.write('No lyrics\n')
+        lyrics_file.close()
+
+        # handle song object
+        song['sname'] = sname
+        song['artists'] = artists
+        song['album'] = album
+        return song
+
+    except RequestException as e:
+        if hasattr(e, 'reason' ):
+            print("Error, reason:", e.reason)
+        else:
+            print("Oops, unexpected request error")
+    except Exception as e:
+        print("unexpected error")
+
+
 
 if __name__ == '__main__':
-    # lid = input('input the playlist id:')
-    playlists_file = open("static/playlists.json", encoding = 'utf-8')
-    playlists = json.loads(playlists_file)
-    lids = ['2256615030']
-    file_path = 'music'
-    # song_names, song_ids = getPlaylist(lid)
     session = requests.session()
-    for lid in lids
-        if playlists.has_key(lid):
+
+    playlists_file = open("static/music/playlists.json",'r+', encoding = 'utf-8')
+    songs_file = open("static/music/songs.json",'r+', encoding = 'utf-8')
+    playlists = json.load(playlists_file)
+    songs = json.load(songs_file)
+
+    # lids = ['2256615030', '409336560']
+    lids = ['993510552', '540425046']
+    # lids = ['993510552']
+    for lid in lids:
+        if lid in playlists:
             pass
         else :
             playlist = getPlaylist(lid)
-            playlists['lid'] = playlist
+            playlists[lid] = playlist
             for sid in playlist['sids']:
-                downloadSong(sid, file_path)
+                if sid in songs:
+                    pass
+                else:
+                    try:
+                        song = getSong(sid)
+                    except Exception as e:
+                        raise e
+                    songs[sid] = song
 
+    print(songs)
+    print(playlists)
+    songs_file.close()
+    playlists_file.close()
+    playlists_file = open("static/music/playlists.json",'w+', encoding = 'utf-8')
+    songs_file = open("static/music/songs.json",'w+', encoding = 'utf-8')
+    json.dump(songs, songs_file, indent = 4, ensure_ascii = False, sort_keys = True)
+    json.dump(playlists, playlists_file, indent = 4, ensure_ascii = False, sort_keys = True)
+    songs_file.close()
+    playlists_file.close()
 
-    # for i in range(len(song_names)):
-    #     get_song(song_ids[i], i + 1, 'songs')
-    #     get_cover_img(song_ids[i], i + 1, 'imgs')
-    #     get_lyric(song_ids[i], song_names[i], i + 1, 'lyrics')
-    #     print('progress: %d/%d' % (i + 1, len(song_names)))
-
-
-    # print(filenames)
-    # print(filenames[0]- '.mp3')
-    print('All done!'[:-2])
-    url = 'http://music.163.com/song/media/outer/url?id=569214321.mp3'
-    url = ' http://music.163.com/api/song/detail/?id=569214321&ids=%5B569214321%5D'
-    # url = 'http://music.163.com/api/song/lyric?os=pc&id=569214321&lv=-1&kv=-1&tv=-1'
-    try:
-        soup = (session.get(url, headers = headers).content , 'lxml' )
-        r = session.get(url, headers = headers)
-        print(r.status_code)
-        detail = json.loads(r.text)
-        print( type(detail) )
-        print( json.dumps(detail, sort_keys=True, indent=4, separators=(',', ': ') ) )
-        # urllib.request.urlretrieve(url, 'GALWAYGIRL.mp3')
-        print("success")
-        print(soup.prettify() )
-        print("ii")
-    except Exception as e:
-        if hasattr(e, 'reason'):
-            print("error, reason:", e.reason)
 
