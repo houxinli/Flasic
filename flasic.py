@@ -27,6 +27,11 @@ def playlist(lid):
     return render_template('index.html', playlists = All, songs = songs, lid = lid )
     pass
 
+@app.route('/playlist/<lid>/song/<sid>')
+def playlist_song(lid, sid):
+    return render_template('index.html', playlists = All, songs = songs, lid = lid, sid = sid )
+    pass
+
 class Song(object):
     """docstring for Song"""
     def __init__(self, sid):

@@ -6,6 +6,43 @@ body{
 .cover.active{
 	opacity: 1;
 }
+a{
+	opacity: 0.8;
+	color: #C0C4C3;
+}
+span.sname{
+	color: #CE3D3E;
+}
+span.aname{
+	color: #4FB9E6;
+}
+span.alname{
+	color: #39C5BB;
+}
+a:hover{
+	color: #FFFEF8;
+	text-decoration:none;
+	opacity: 1;
+}
+
+.info{
+	display: -webkit-box;
+	-webkit-box-align: center;
+	-webkit-box-pack: center;
+
+	background-color: #464547;
+	color: #F8F4ED;
+	width: 150px;
+	height: 150px;
+	text-align: center;
+	opacity: 0;
+	position: absolute;
+	top: 0;
+	z-index: 1;
+}
+.info:hover{
+	opacity: 0.9;
+}
 
 img{
 	max-width: 50;

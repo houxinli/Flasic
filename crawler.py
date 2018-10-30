@@ -13,6 +13,7 @@ headers = {
         'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' 
 }
 
+count = 0
 
 def getPlaylist(lid = '2256615030'):
     playlist_url = 'http://music.163.com/playlist?id=' + str(lid)
@@ -36,6 +37,7 @@ def getPlaylist(lid = '2256615030'):
 # def downloadSong(sid, file_path):
 
 def getSong(sid):
+    global count
     song = {}
     song['sid'] = sid
     try:
@@ -58,7 +60,7 @@ def getSong(sid):
         album = {"alid": alid, "alname": alname}
         # download cover
         img_element = soup.select('.cvrwrap img')[0]
-        url = img_element['src'].replace('130', '100')
+        url = img_element['src'].replace('130', '150')
         urllib.request.urlretrieve(url, 'static/music/cover/' + str(sid) + ".png" )
         
         # handle lyrics
@@ -66,24 +68,28 @@ def getSong(sid):
         response = requests.get(url, headers = headers)
         text = response.text
         lyrics_json = json.loads(text)
-        lyrics = lyrics_json['lrc']['lyric']
-        lines = re.findall( r'\[.*\](.*)', lyrics )
+        # print(json.dumps(lyrics_json, indent = 4, ensure_ascii=False))
         lyrics_file = open('static/music/lyrics/' + str(sid) + '.txt', 'w+', encoding='utf-8' )
         lyrics_file.write(sname + '\nArtists:')
         for artist in artists:
-            lyrics_file.write(artist['aname'] + ' / ')
+            lyrics_file.write(artist['aname'] + '/ ')
         lyrics_file.write('\nAlbum:' + str(alname) + '\n\n')
-        if len(lines) > 0 :
+        try:
+            lyrics = lyrics_json['lrc']['lyric']
+            lines = re.findall( r'\[.*\](.*)', lyrics )
             for line in lines:
                 lyrics_file.write(line.strip() + '\n' )
-        else:
+        except :
             lyrics_file.write('No lyrics\n')
-        lyrics_file.close()
+        finally:
+            lyrics_file.close()
 
         # handle song object
         song['sname'] = sname
         song['artists'] = artists
         song['album'] = album
+        count += 1
+        print("No.",str(count) , ": " , sname, "...100%")
         return song
 
     except RequestException as e:
@@ -95,15 +101,20 @@ def getSong(sid):
         print("unexpected error")
 
 def init():
-    os.remove("static/music/playlists.json")
-    os.remove("static/music/songs.json")
+    if not os.path.exists("static"):
+        os.mkdir('static')
+    if not os.path.exists('static/music'):
+        os.mkdir('static/music')
+
     if os.path.exists("static/music/playlists.json"):
+        os.remove("static/music/playlists.json")
         pass
     else:
         playlists_file = open("static/music/playlists.json",'w+', encoding = 'utf-8')
         playlists_file.write('{}')
         playlists_file.close()
     if os.path.exists("static/music/songs.json"):
+        os.remove("static/music/songs.json")
         pass
     else:
         songs_file = open("static/music/songs.json",'w+', encoding = 'utf-8')
@@ -128,9 +139,8 @@ if __name__ == '__main__':
     songs_file.close()
     playlists_file.close()
 
-    # lids = ['2256615030', '409336560']
-    lids = ['993510552', '540425046']
-    # lids = ['993510552']
+    lids = ['993510552', '540425046', '503865635', '409336560']
+    # lids = ['503865635', '409336560'] # 在此处控制需要的歌单列表
     for lid in lids:
         if lid in playlists:
             pass
@@ -155,5 +165,6 @@ if __name__ == '__main__':
     json.dump(playlists, playlists_file, indent = 4, ensure_ascii = False, sort_keys = True)
     songs_file.close()
     playlists_file.close()
+    print("下载完成! 本次共下载：", count, "首歌曲")
 
 

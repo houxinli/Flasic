@@ -42,7 +42,12 @@ function activate() {
 		$('#' + id).addClass("active");
 	}
 	else if (r == 'playlist'){
-		$('.playlist.' + id).addClass("active");	
+		$('.playlist.' + id).addClass("active");
+		if(cname_sname.length > 2){
+			sid = cname_sname[4]
+			console.log("sid:", sid);
+			$('#' + sid).addClass("active");
+		}
 	}
 
 }
